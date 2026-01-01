@@ -1,0 +1,57 @@
+# === Rust ===
+/target/
+**/target/
+**/*.rs.bk
+Cargo.lock
+
+# === Node.js ===
+/node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+server/.env
+.env.*.local
+
+# === IntelliJ ===
+.idea/
+*.iml
+*.iws
+out/
+
+# === VS Code ===
+.vscode/
+.history/
+
+# === OS-specific ===
+.DS_Store
+Thumbs.db
+
+# === Logs ===
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
+
+# === Builds ===
+/dist/
+/build/
+/coverage/
+
+# === Misc ===
+*.swp
+*.bak
+*.tmp
+*.old
+*.orig
+
+
+# === Local ===
+media/**
+vertexshaderart.com
+bin/scanner.exe
+#steam_data/*
+server/secrets/**
+.env
