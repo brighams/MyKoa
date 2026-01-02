@@ -1,10 +1,10 @@
 import session from 'koa-session'
 import passport from 'koa-passport'
 import {configurePassport} from './twitch-auth.mjs'
-import {SESSION_SECRET} from './space-utils.mjs'
+import {getConfig} from './server-config.mjs'
 
 export const setupSession = (app) => {
-  app.keys = [SESSION_SECRET]
+  app.keys = [getConfig().SESSION_SECRET]
   const sessionConfig = {
     key: 'koa:sess',
     maxAge: 86400000,

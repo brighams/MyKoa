@@ -10,7 +10,6 @@ import path from 'path'
  */
 const toCanonical = async (p, {mustExist = true} = {}) => {
   if (!mustExist) {
-    // Resolve as much as possible of the path
     const parts = path.resolve(p).split(path.sep)
     for (let i = parts.length; i > 0; i--) {
       const probe = parts.slice(0, i).join(path.sep) || path.sep
