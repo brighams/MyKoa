@@ -1,44 +1,26 @@
 import path from 'path'
-// import yaml from 'yaml'
-// import fs from 'fs'
-// import {fileURLToPath} from 'url'
-// import https from 'https'
-// import sendFile from 'koa-sendfile'
 
 import Koa from 'koa'
 import parser from 'koa-bodyparser'
 import Router from 'koa-router'
 import serve from 'koa-static'
-
 import cors from '@koa/cors'
-// import passport from 'koa-passport'
 
-import {openDB} from 'MySqlite3.mjs'
 import {initApi} from './server-api.mjs'
 import {setupSession} from './server-session.mjs'
 import {
   createSslServer,
   WRITE_LOG,
-  CONFIG_CHECK,
-  BIND_PORT,
-  BIND_ADDRESS,
-  STARKEEPER_DATABASE_FILE,
-  WEB_PUBLIC_ROOT,
-  APP_BASE_URL,
-  // SSL_KEY_PATH,
-  // SSL_CERT_PATH,
-  SSL_ENABLED
-} from './space-utils.mjs'
+} from './utils.mjs'
+import {checkEnv} from "./check-env.mjs";
 
-CONFIG_CHECK()
-
-const db = openDB(STARKEEPER_DATABASE_FILE)
+checkEnv()
 
 const app = new Koa()
-const server = SSL_ENABLED ? createSslServer(app) : app
+const server = process.env.MK_SSL_ENABLED === '1' ? createSslServer(app) : app
 
 const router = new Router()
-initApi(router, db)
+initApi(router)
 app.use(parser())
 app.use(async (ctx, next) => {
   WRITE_LOG(`⭐ ⭐ ⭐ <-- Incoming: ${ctx.method} ${ctx.url}`)
@@ -52,11 +34,10 @@ app.use(cors({
 }))
 app.use(router.routes())
 app.use(router.allowedMethods())
-app.use(serve(WEB_PUBLIC_ROOT))
+app.use(serve(process.env.MK_WEB_PUBLIC_ROOT))
 setupSession(app)
-// installTwitchRoutes(router, passport)
 
-server.listen(BIND_PORT, BIND_ADDRESS, () => {
+server.listen(process.env.MK_BIND_PORT, process.env.MK_BIND_ADDRESS, () => {
   const NOW = new Date().toLocaleString('en-US', {
     weekday: 'long',
     year: 'numeric',
@@ -67,10 +48,13 @@ server.listen(BIND_PORT, BIND_ADDRESS, () => {
     second: '2-digit',
     hour12: false
   })
-  // startChatBot()
+
   WRITE_LOG(`🚀 🚀 🚀 ${NOW}`)
   WRITE_LOG(`🚀 🚀 🚀 Process Directory:  ${process.cwd()} 🚀 🚀 🚀`)
-  WRITE_LOG(`🚀 🚀 🚀 Database:           ${path.resolve(STARKEEPER_DATABASE_FILE)} 🚀 🚀 🚀`)
-  WRITE_LOG(`🚀 🚀 🚀 Now Serving Public: ${path.resolve(WEB_PUBLIC_ROOT)} 🚀 🚀 🚀`)
-  WRITE_LOG(`⭐ ⭐ ⭐ -> Server listening ${APP_BASE_URL}/ ⭐ ⭐ ⭐`)
+  WRITE_LOG(`🚀 🚀 🚀 Now Serving Public: ${path.resolve(process.env.MK_WEB_PUBLIC_ROOT)} 🚀 🚀 🚀`)
+  if (process.env.MK_SSL_ENABLED === '1') {
+    WRITE_LOG(`⭐ ⭐ ⭐ -> Server listening SSL https://${process.env.MK_BIND_ADDRESS}:${process.env.MK_BIND_PORT}/ ⭐ ⭐ ⭐`)
+  } else {
+    WRITE_LOG(`⭐ ⭐ ⭐ -> Server listening http://${process.env.MK_BIND_ADDRESS}:${process.env.MK_BIND_PORT}/ ⭐ ⭐ ⭐`)
+  }
 })

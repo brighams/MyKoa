@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Server Status</title>
+  <style>
+    :root {
+      --duration: 2s;
+      --move-duration: 12s;
+      --distance-y: 100px;
+      --distance-x: 100px;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #4b0082, #9370db, #663399);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .message {
+      color: white;
+      font-size: 3rem;
+      font-weight: bold;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+      z-index: 10;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+      100% { opacity: 0.8; transform: scale(1); }
+    }
+
+    .star {
+      position: absolute;
+      background-color: white;
+      border-radius: 50%;
+      animation: twinkle var(--duration) infinite, move var(--move-duration) linear infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes move {
+      0% { transform: translateY(0) translateX(0); }
+      100% { transform: translateY(var(--distance-y)) translateX(var(--distance-x)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="message">Server is ON</div>
+  <div style="color: cyan; position: absolute; font-size: 19px; line-height: 26px; bottom: 1em; left: 0; right: 0;
+  text-align:
+  center;">
+    <div><a href="https://github.com/brighams/MyKoa">MyKoa Source</a></div>
+    <div><a href="https://github.com/brighams/app-sauce">app-sauce quickstart app setup</a></div>
+  </div>
+  <script>
+    // Create stars
+    function createStars(count) {
+      const body = document.querySelector('body');
+
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+
+        // Random size between 1px and 4px
+        const size = Math.random() * 3 + 1;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+
+        // Random position
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+
+        // Random animation duration for twinkling
+        const duration = Math.random() * 3 + 2;
+        star.style.setProperty('--duration', `${duration}s`);
+
+        // Random movement
+        const moveDuration = Math.random() * 30 + 15;
+        star.style.setProperty('--move-duration', `${moveDuration}s`);
+
+        // Random movement distance
+        const distanceY = (Math.random() * 200 - 100) + 'px';
+        const distanceX = (Math.random() * 200 - 100) + 'px';
+        star.style.setProperty('--distance-y', distanceY);
+        star.style.setProperty('--distance-x', distanceX);
+
+        body.appendChild(star);
+      }
+    }
+
+    // Create 100 stars
+    createStars(100);
+  </script>
+</body>
+</html>

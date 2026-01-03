@@ -5,9 +5,9 @@
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "server.mjs",
+  "main": "./src/server.mjs",
   "scripts": {
-    "start": "node server.mjs"
+    "start": "node --env-file=./.env ./src/server.mjs"
   },
   "dependencies": {
     "@koa/cors": "^5.0.0",
