@@ -1,7 +1,7 @@
 # MyKoa
 Minimal Koa setup for a development environment
 
-Example output from successful start and how invalid configuration errors are handled:
+Server home page after running `npm start`:
 ![README](README.png)
 
 TODO: Oauth2, sqlite3, websockets
