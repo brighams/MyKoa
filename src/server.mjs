@@ -14,47 +14,50 @@ import {
 } from './utils.mjs'
 import {checkEnv} from "./check-env.mjs";
 
-checkEnv()
 
-const app = new Koa()
-const server = process.env.MK_SSL_ENABLED === '1' ? createSslServer(app) : app
+export const startServer = () => {
+  checkEnv()
 
-const router = new Router()
-initApi(router)
-app.use(parser())
-app.use(async (ctx, next) => {
-  WRITE_LOG(`⭐ ⭐ ⭐ <-- Incoming: ${ctx.method} ${ctx.url}`)
-  await next()
-})
+  const app = new Koa()
+  const server = process.env.MK_SSL_ENABLED === '1' ? createSslServer(app) : app
 
-app.use(cors({
-  origin: '*',
-  allowMethods: ['GET', 'POST', 'OPTIONS'],
-  allowHeaders: ['Content-Type']
-}))
-app.use(router.routes())
-app.use(router.allowedMethods())
-app.use(serve(process.env.MK_WEB_PUBLIC_ROOT))
-setupSession(app)
-
-server.listen(process.env.MK_BIND_PORT, process.env.MK_BIND_ADDRESS, () => {
-  const NOW = new Date().toLocaleString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
+  const router = new Router()
+  initApi(router)
+  app.use(parser())
+  app.use(async (ctx, next) => {
+    WRITE_LOG(`⭐ ⭐ ⭐ <-- Incoming: ${ctx.method} ${ctx.url}`)
+    await next()
   })
 
-  WRITE_LOG(`🚀 🚀 🚀 ${NOW}`)
-  WRITE_LOG(`🚀 🚀 🚀 Process Directory:  ${process.cwd()} 🚀 🚀 🚀`)
-  WRITE_LOG(`🚀 🚀 🚀 Now Serving Public: ${path.resolve(process.env.MK_WEB_PUBLIC_ROOT)} 🚀 🚀 🚀`)
-  if (process.env.MK_SSL_ENABLED === '1') {
-    WRITE_LOG(`⭐ ⭐ ⭐ -> Server listening SSL https://${process.env.MK_BIND_ADDRESS}:${process.env.MK_BIND_PORT}/ ⭐ ⭐ ⭐`)
-  } else {
-    WRITE_LOG(`⭐ ⭐ ⭐ -> Server listening http://${process.env.MK_BIND_ADDRESS}:${process.env.MK_BIND_PORT}/ ⭐ ⭐ ⭐`)
-  }
-})
+  app.use(cors({
+                 origin: '*',
+                 allowMethods: ['GET', 'POST', 'OPTIONS'],
+                 allowHeaders: ['Content-Type']
+               }))
+  app.use(router.routes())
+  app.use(router.allowedMethods())
+  app.use(serve(process.env.MK_WEB_PUBLIC_ROOT))
+  setupSession(app)
+
+  server.listen(process.env.MK_BIND_PORT, process.env.MK_BIND_ADDRESS, () => {
+    const NOW = new Date().toLocaleString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    })
+
+    WRITE_LOG(`🚀 🚀 🚀 ${NOW}`)
+    WRITE_LOG(`🚀 🚀 🚀 Process Directory:  ${process.cwd()} 🚀 🚀 🚀`)
+    WRITE_LOG(`🚀 🚀 🚀 Now Serving Public: ${path.resolve(process.env.MK_WEB_PUBLIC_ROOT)} 🚀 🚀 🚀`)
+    if (process.env.MK_SSL_ENABLED === '1') {
+      WRITE_LOG(`⭐ ⭐ ⭐ -> Server listening SSL https://${process.env.MK_BIND_ADDRESS}:${process.env.MK_BIND_PORT}/ ⭐ ⭐ ⭐`)
+    } else {
+      WRITE_LOG(`⭐ ⭐ ⭐ -> Server listening http://${process.env.MK_BIND_ADDRESS}:${process.env.MK_BIND_PORT}/ ⭐ ⭐ ⭐`)
+    }
+  })
+}

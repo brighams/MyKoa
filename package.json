@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
-  "author": "",
+  "author": "Brigham Stevens",
   "type": "module",
-  "main": "./src/server.mjs",
+  "main": "./src/main.mjs",
   "scripts": {
-    "start": "node --env-file=./.env ./src/server.mjs"
+    "start": "node --env-file=./.env ./src/main.mjs"
   },
   "dependencies": {
     "@koa/cors": "^5.0.0",
