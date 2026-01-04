@@ -15,14 +15,16 @@ import {
 import {checkEnv} from "./check-env.mjs";
 
 
-export const startServer = () => {
+export const startServer = (setupRoutes) => {
   checkEnv()
 
   const app = new Koa()
   const server = process.env.MK_SSL_ENABLED === '1' ? createSslServer(app) : app
 
   const router = new Router()
-  initApi(router)
+  if (setupRoutes) {
+    setupRoutes(router)
+  }
   app.use(parser())
   app.use(async (ctx, next) => {
     WRITE_LOG(`⭐ ⭐ ⭐ <-- Incoming: ${ctx.method} ${ctx.url}`)
@@ -60,4 +62,5 @@ export const startServer = () => {
       WRITE_LOG(`⭐ ⭐ ⭐ -> Server listening http://${process.env.MK_BIND_ADDRESS}:${process.env.MK_BIND_PORT}/ ⭐ ⭐ ⭐`)
     }
   })
+  return router
 }
